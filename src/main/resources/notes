@@ -1,0 +1,80 @@
+##### NOTE #####
+1. Please replace with your credentials where we have TODO added in the class files in this project.
+2. Please use your own log lib as per your need.
+3. This Springboot is running on default port 8080, please change it as per your needs in application.properties
+4. DFCXPhraseGeneratorApplication.java has the main(), you can run this application by running this class DFCXPhraseGeneratorApplication.
+
+|------------|
+| OpenAI API |
+|------------|  
+https://api.openai.com/v1/completions
+EngineeredPrompt : "Generate 10 professional user utterances for the intent "\""+ <intent> +"\" and 
+display without numbering and bullet points"
+Get OpenAI API key {{OpenAI_Key}} : https://beta.openai.com/account/api-keys 
+Payload: {
+  "model": "text-davinci-003",
+  "prompt": "Generate 10 professional user utterances for the intent \"plan my trip\" and display without numbering and bullet points",
+  "temperature": 0,
+  "max_tokens": 310,
+  "top_p": 1,
+  "frequency_penalty": 0.5,
+  "presence_penalty": 0
+}
+Type : POST
+Headers : Content-Type:application/json
+		  Authorization:{{OpenAI_Key}}
+
+|------------------------|
+|Google Dialogflow CX api|
+|------------------------|
+https://REGION_ID-dialogflow.googleapis.com/v3/projects/PROJECT_ID/locations/REGION_ID/agents/AGENT_ID/intents
+Get Google access token:
+using GCP cloud shell {{GCP_BEARER_TOKEN}} : "gcloud auth print-access-token"
+Payload: {
+  "displayName": "ForgotPassword",
+  "trainingPhrases": [
+    {
+      "parts": [
+        {
+          "parameterId": "",
+          "text": "I need to reset my password"
+        }
+      ],
+      "repeatCount": 1
+    },
+    {
+      "parts": [
+        {
+          "parameterId": "",
+          "text": "I need help with my password reset"
+        }
+      ],
+      "repeatCount": 1
+    }
+  ]
+}
+Type : POST
+Headers : Authorization:Bearer {{GCP_BEARER_TOKEN}}
+		  x-goog-user-project:<Dialogflow_Agent_Name>
+		  Content-Type:application/json
+
+|------------|
+|   TAGS     |
+|------------|
+#GenerativeAI #OpenAI #DialogflowCX #Automation #Phrases #VirtualAgent #Springboot #NaturalLanguageProcessing #TrainingPhrases #GPT3_5 #
+
+|--------------|
+| GITHUB LINK  |
+|--------------|
+https://github.com/technocouple/gpt3-dfcx-phrase-generator.git
+
+Running this tool:
+1. Run DFCXPhraseGeneratorApplication.java
+2. Hit http://localhost:8080/intentgenerator.html
+3. Give a Intent, for which you need Training Phrases
+4. You will see 10 training phrases on the screen
+5. Now, these phrases can be uploaded to Dialogflow CX virtual agent and train the model.
+
+Please note, in this example we have only shown to upload the training phrase for a particular
+agent which is configured in the code. This can be further extended and externalize the agent
+name to be picked dynamically or list down all the agents and upload it to the selected one.
